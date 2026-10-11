@@ -1,0 +1,269 @@
+- git add to add a file to the staging area
+
+- git commit -m "commit message" to commit the file
+    --amend to change to the commit message
+
+
+- git log to show all the history of the commits in a repository
+    .you can also provide branch name after git log.
+    -n <maximum number of commits shown>
+    --no-pager to run without the interactive mode
+    -p to show the commit message and the changes made in the commit
+    --stat to show the number of lines added and removed in the commit
+    --shortstat to show the number of lines added and removed in the commit in a short format
+    --parents to show the parent of the commit
+    --graph to show how your commits are being merged
+        use --all to show all commit history
+
+- there are a lot of factors that affects the end Hash like:
+    the commit message
+    the author's name and email
+    the date and time
+    the previous commit hashes
+
+- git cat-file -p <hash>, first git the hash of the commit that you want to view its content
+    then use the same command with the tree hash to view the blob
+    tree: git's way of storing a directory
+    then use it again with the blob hash to view the its content
+    blob: git's way of storing a file
+    
+- git config --add --local or --global <section name>.<key name> <value>
+
+- git config --list --local or --global
+
+- git config --get --local or --global <section name>.<key name>
+    or git config <section name>.<key name>
+    this will give you the last value if the key is dublicated
+    if you want all valuse for that key then user git config --get-all option instead.
+
+- git config --unset --local or --global <section name>.<key name>
+    the opposite of the git config --get or --get-all
+
+- git config --remove-section <section name> to remove the entire section
+
+- git branch to show the current branch
+    -m <old name> <new name> to raname an exsiting branch
+    -a to list all branchs
+
+- git branch <branch name> to create a new one.
+
+- git switch -c <branch name> to create a new one and switch immediately to it.
+    git switch -c update_dune <COMMITHASH> you can branch form a certain commit by providing the hash  
+
+- git checkout -b <branch name> to create a new one and switch immediately to it.
+    --theirs:
+         will overwrite the file with the changes from the branch you are merging into the current branch
+    --ours:
+         will overwrite the file with the changes from the branch you are currently on and merging into
+
+- .git/refs/heads stores one file for each branch containing the commit hash that the 
+    branch points to.
+
+-Here's a diagram of a fast-forward merge. Before:
+
+        C     other_branch
+        /
+    A - B       main
+
+    After git merge other_branch:
+
+                other_branch
+    A - B - C   main
+
+    No merge commit is created.!!
+
+- git has three operations
+    add
+    delete
+    modify
+
+- git rebase <branch name>  
+    Rebase avoids a merge commit by replaying the commits from feature_branch on top of main. 
+
+    A - B - C    main
+       \
+        D - E    feature_branch
+
+    after git rebase main
+
+    A - B - C         main
+             \
+              D - E   feature_branch
+
+- git reset
+    --soft <COMMITHASH>:
+        Move the branch pointer to the specified commit, but leave the working tree and the index unchanged.
+
+    --hard <COMMITHASH> | --hard to discard all the changes made:
+        Move the branch pointer to the specified commit, and discard all changes in the working tree and the index.
+
+- git fetch Download objects and refs from another repository
+
+- git push origin <localbranch>:<remotebranch>
+
+- git push origin :<remotebranch> You can also delete a remote branch by pushing an empty branch to it:
+
+- you can use .git/info/exclude file as your .gitignore file.
+
+- Reflog uses a different format to show the history of a branch or HEAD: one that's more concerned
+    with the number of steps back in time. For example:
+
+    reflog	meaning
+    HEAD@{0}	where HEAD is now
+    HEAD@{1}	where HEAD was 1 move ago
+    HEAD@{2}	where HEAD was 2 moves ago
+    HEAD@{3}	where HEAD was 3 moves ago
+    ...	...
+
+ 
+- git rebase --continue to make continue relsolving the rebase conflict.
+- git rebase --skip to skip the conflict and continue the rebase.
+
+- git rebase -i <commit-hash>^
+    the interactive editor
+
+- git rebase --abort to Abort the rebase operation and reset the branch to its original state.
+
+* remember the git reset --soft HEAD~1 command
+
+- git rebase -i HEAD~N to Squash N of commits into a single commit 
+    where i is the interactive mode option
+    N is the number of commits to Squash
+
+- git stash command records the current state of your working directory and the index (staging area).
+    It's kinda like your computer's copy/paste clipboard.
+    It records those changes in a safe place and reverts the working directory to match the HEAD commit (the last commit on your current branch).
+
+    git stash to save your work
+    git stash list to see your list
+    git stash pop apply your most recent stash entry to your working directory and remove it from the stash list
+    git stash push -m | --message "message"
+    git stash apply just like pop, but it will keep the stash in the stash list.
+    git stash drop This will remove the most recent stash from the stash list without applying it.
+    
+    # Apply the third (0, 1, 2) most recent stash
+    git stash apply stash@{2}
+
+    # Remove the third most recent stash
+    git stash drop stash@{2}
+
+- git revert <COMMITHASH> Creates a new commit that undoes the changes of a previous commit
+
+- git diff shows you the differences between... stuff. Differences between commits, the working tree, etc.
+    git diff HEAD~1 show the differences between the previous commit and the current state, including the last commit and uncommitted changes
+    git diff COMMIT_HASH_1 COMMIT_HASH_2 shows the change between two commits
+
+- git cherry-pick <COMMITHASH> Picking a Specific Commit from Another Branch
+    --abort
+    --continue
+
+- git config --local alias.pushall '!git push origin main && git push upstream main'
+    now git pushall is an alias for whatever you set 
+
+- Add Multiple Push URLs to origin
+    git remote set-url --add origin https://github.com/your-username/your-repo.git
+    git remote set-url --add origin https://github.com/original-author/original-repo.git
+
+    git remote -v
+
+- git fetch origin
+    Fetch latest changes from origin (without merging them)
+
+- git pull origin main
+    Pull latest changes from origin/main (fetch + merge)
+
+- git bisect to search for a commit that introduced a bug by doing a binary search on commits
+    git bisect start to start bisecting
+    git bisect bad <COMMITHASH> to set the bad one or leave it empty to use the current hash
+    git bisect good <COMMITHASH> 
+    git bisect reset to end bisecting
+    git bisect run <automated script>
+ 
+
+ - git worktree is just the directory on your filesystem where the code you're tracking with Git lives.
+    .Tracked files (files that Git knows about)
+    .Untracked files (files that Git doesn't know about)
+    .Modified files (files that Git knows about that have been changed since the last commit)
+
+    We've talked about:
+
+    Stash (temporary storage for changes)
+    Branches (parallel lines of development)
+    Clone (copying an entire repo)
+
+    Worktrees accomplish a similar goal (allow you to work on different changes without losing work), but are particularly useful when:
+        You want to switch back and forth between the two change sets without having to run a bunch of git commands (not branches or stash)
+        You want to keep a light footprint on your machine that's still connected to the main repo (not clone)
+
+- git worktree list to list all worktrees
+
+- git worktree add <path> [<branch>]
+    <branch> is optional, it will use the last part of the path as the branch name.
+    you cannot work on a branch that is currently checked out by any other working tree (main or linked)
+    ruuning a git branch on your main worktree tells you if a branch is checked out in a different worktree by ( + ) prefix
+
+
+** TO CLEAN UP YOUR WORKTREES
+
+- git worktree remove <WORKTREE_NAME> OR PATH TO IT
+    Removes worktree reference from the .git/ main worktree
+    Fails if the worktree has uncommitted changes (unless --force is used)
+
+    -----
+    OR
+    -----
+
+- git worktree prune
+    Use git worktree prune only if worktree directories were deleted manually (e.g., via rm).
+    Does not delete working directories (only removes Git's internal tracking).
+    Typically used after manually deleting a worktree directory (e.g., with rm -rf).
+        Cleanup after manual deletion
+    Safe to run; only removes orphaned metadata.
+
+** When to Use git worktree vs. Alternatives
+
+(Tool)	        (Best For)	                                            (Limitations)	                                (Worktrees’ Advantage)
+-stash	Quick context switches (temporarily shelve changes).	Changes are hidden, not editable.	    Worktrees let you actively work on multiple changes simultaneously.
+-branch	Isolating features/hotfixes (standard workflow).	    Requires checkout/switch to toggle.	    Worktrees avoid switching—parallel directories for simultaneous work.
+-clone	Full isolation (e.g., experimenting safely).	        Duplicates the entire repo (heavy).	    Worktrees share the main repo’s objects (lightweight).
+
+
+
+- git tag to list all tags
+
+- git tag -a <TAG_NAME> -M <TAG_MESSAGE>
+
+- git push origin --tags to push your tags
+
+** Semver or Semantic Versioning v1.0.0
+
+    It has two primary purposes:
+
+    To give us a standard convention for versioning software
+    To help us understand the impact of a version change and if it's safe (how hard it will be) to upgrade to
+    Each part is a number that starts at 0 and increments upward forever. The rules are simple:
+
+    MAJOR.MINOR.PATCH EX v1.0.0
+        
+        MAJOR increments when we make "breaking" changes (this is typically a big release, for example, Python 2 -> Python 3)
+        MINOR increments when we add new features in a backward-compatible manner
+        PATCH increments when we make backward-compatible bug fixes
+
+
+        Examples:
+
+        Starting a Project
+
+        1.0.0 → First stable release.
+
+        Adding a Feature
+
+        1.1.0 → Added a new button (no breaking changes).
+
+        Fixing a Bug
+
+        1.1.1 → Fixed a bug where the button didn’t work on mobile.
+
+        Breaking Change
+
+        2.0.0 → Removed the old button (users must update their code).
