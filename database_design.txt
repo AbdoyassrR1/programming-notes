@@ -1,0 +1,319 @@
+							----- Steps before Design -----
+
+1- Gathering Requirements
+
+2- DBMS Selection
+
+3- Analysis
+	-Entities
+	-Attributes
+	-Relationships
+
+4- Logical Design
+	-Normalization
+
+5- Physical Design
+
+6- Creation
+
+							----- Relationships -----
+
+
+(1) Degree
+
+- Unary Relationship (Degree = 1)
+	like (User friend with another User)
+
+- Binary Relationship (Degree = 2)
+	like (Employee works in Company)
+
+- Ternary Relationship (Degree = 3)
+	like (Student, Teacher & Course)
+
+
+(2) Cardinality Ratio (Maximum)
+
+Maximum number of entity instances connected by the relationship either one or many
+
+
+- 1:1 Relationship (one-to-one)
+
+- 1:N Relationship (one-to-many)
+
+- N:1 Relationship (many-to-one)
+
+- M:N Relationship (many-to-many)
+
+
+(3) Participation (Minimum)
+
+describes how an entity participates in a relationship
+(Total or partial) Participation
+
+OR
+
+does every entity instance have to participate? 
+Total Participation = Mandatory.
+Partial Participation = Optional.
+
+Cardinality 	----> Maximum (1 or Many)
+Participation 	----> Minimum (0 or 1)
+
+ex:
+
+	      Total	 M	      N   Partial
+Order============(contains)------------Product
+
+Product can exists with out having orders
+but,
+Order should has a Product to be exists
+
+
+Employee works in : at least 1 Department, at most 1 Department
+Department has : at least 1 employee, at most N employee
+
+
+    	  Total	    N	     1   Total
+Employee============(works in)============Department
+
+
+
+	  Partial      M	N     Partial
+Student----------------(enrolled)----------------Course
+
+
+another way to do it in diagram
+
+ex:
+							Relationship
+Entity1(max2, min2)--------------------------------(min1, max1)entity2
+
+							works in
+Employee(many, 1)--------------------------------(1, 1)Department
+
+						contains
+Order(many, 0)--------------------------------(1, many)Product
+
+							enrolled
+Student(many, 0)--------------------------------(0, many)Course
+
+
+
+
+							----- Database KEYS -----
+
+
+
+
+types:
+
+1) Primary Key (PK)
+one of the candidate keys
+
+2) Candidate Key
+minimal super key
+
+3) Super Key
+one or more attribute that could identify a row in table
+
+4) Alternate Key
+any Candidate key that is not chosen as primary key
+
+5) Foreign Key
+refer to another column in different table and the data should be exist in that colunm
+
+6) Natural Key
+the opposite of Surrogate it is an attribute that has meaning out side the Database like email
+
+7) Surrogate Key
+like ID Column in the table it has not any meaning out side the Database
+
+8) Simple Key
+only one attribute
+
+9) Composite Key
+more than one attribute
+
+
+							----- ER-to-Relational Mapping -----
+
+- step 1 entities
+
+each entity becomes a table
+attributes become column in the table
+choose primary key
+
+
+
+- step 2 (1:1) relationships
+entities S, T
+
+1) if S and T has total participation, merge both tables into one,
+and add the relation attributes to the merged table
+
+2) if S is partial and T is total, add foreign key to T that refers to primary key of S it can be also the Primary key of T,
+and add the relation attributes to T
+
+3) if S and T has partial participation add foreign key to either one that refers to the primary key of the other
+and add the relation attributes to the table with foreign key
+
+
+- step 3 (1:N) relationships
+entities S (N) side (Post), T (1) side (User)
+Ex:
+posts many side, users 1 side
+User has many posts so we will add FK to the posts table like author id
+user many side, Role 1 side
+Role has many Users so we will add FK to the Users table like user id
+
+
+add foreign key in S that refers to Primary key of T
+and add the relation attributes to the S table
+
+- step 4 (M:N) relationships
+entities S, T
+
+create a new table R to represent the relationship.
+and add foreign keys in R that refers to both S and T
+the primary key of R is a composite key of all foreign key + additional columns if needed
+and add the relation attributes to the R table
+
+
+
+
+
+
+							----- Normalization -----
+
+
+
+
+* Normal Forms.
+
+1) First Normal Form (1NF)
+
+- multi-valued cells violate 1NF
+each row have one value not a list of values.
+
+- using row order to convey information violates 1NF
+create a column like created at or joined at to query the data in any order.
+
+- having duplicate rows violates 1NF
+always create a primary key to prevent duplicate data or rows in the table.
+
+----------------------------------------------------------------------------------------------------
+
+2) Second Normal Form.
+
+- must satisfy 1NF
+
+- each non-key attribute must depend on the entire PK
+EX:
+student - course - score - instructor
+
+{student - course} the primary key of the table
+
+{student - course} -----> score (true) because score depend on the PK
+{course} -----> instructor  (false) because instructor doesn't depend on the PK
+
+so you should create another table for courses
+
+student table
+student id - course id - score
+
+course table
+course id - instructor
+
+----------------------------------------------------------------------------------------------------
+
+3) Third Normal Form.
+
+- must satisfy 2NF
+
+- no non-key attribute is dependent on another non-key attribute.
+
+instructor table
+course id - instructor - phone
+
+{course} -----> instructor True
+{course} -----> instructor -----> phone False because of transitive dependency
+
+so you should create another table for instructors
+
+instructor table
+instructor - phone
+
+course table
+course id - instructor
+
+----------------------------------------------------------------------------------------------------
+
+4) BCNF (3.5)NF.
+
+- must satisfy 3NF
+
+- no attribute is dependent on a non-key attribute.
+
+----------------------------------------------------------------------------------------------------
+
+5) Fourth Normal Form.
+
+- must satisfy BCNF
+
+- every non-trivial multi-valued dependency must depend on the key
+
+product table
+item - color - size
+
+-------------------
+product color table
+item - color
+
+product size table
+item - size
+-------------------
+
+----------------------------------------------------------------------------------------------------
+
+6) fifth Normal Form.
+
+- must satisfy 4NF
+
+- there must no join dependencies
+join dependencies is a table that can be decomposed into a join of multiple tables without loss of information. 
+
+preferences table
+customer - brand - flavor
+
+this table has join dependencies
+
+the best way:
+
+brand flavor table
+brand - flavor
+
+customer brand table
+customer - brand
+
+customer flavor table
+customer - flavor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
